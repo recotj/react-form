@@ -1,0 +1,34 @@
+{
+  "name": "react-form",
+  "version": "0.0.1",
+  "description": "a form component based on React.js",
+  "main": "./lib/react-form.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/recotj/react-form.git"
+  },
+  "keywords": [
+    "form",
+    "react.js"
+  ],
+  "author": "reco",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/recotj/react-form/issues"
+  },
+  "homepage": "https://github.com/recotj/react-form#readme",
+  "dependencies": {
+    "decorators": "git+https://github.com/recotj/decorators.git",
+    "keycodes": "git+https://github.com/recotj/keycodes.git",
+    "lodash": "^4.11.1",
+    "react": "^15.0.1",
+    "react-dom": "^15.0.1",
+    "utils": "git+https://github.com/recotj/utils.git"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
