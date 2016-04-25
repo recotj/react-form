@@ -10,7 +10,7 @@ insert_final_newline = true
 max_line_length = 80
 trim_trailing_whitespace = true
 
-[*.json]
+[*.json, *rc]
 indent_style = space
 indent_size = 2
 

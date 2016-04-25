@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {pool} = require('decorators');
+const pool = require('decorators/lib/decorator-pool');
 
 const PERSISTENT = Symbol();
 
