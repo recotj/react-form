@@ -28,18 +28,17 @@ class Form extends mixin(DescendantsWalkable) {
 		const form = ReactDOM.findDOMNode(this);
 
 		this.walkDescendants((_, descendant, path, next) => {
-			const domNode = ReactDOM.findDOMNode(descendant);
-
 			if (descendant instanceof Validator) {
 				validationTasks.push(() => Validator.validate());
 			} else {
+				const domNode = ReactDOM.findDOMNode(descendant);
 				Object.assign(submitData, fetchFieldValuePair(domNode));
 			}
 
 			next();
 		});
 
-		if (Object.keys(submitData).length === 0) return;
+		//if (Object.keys(submitData).length === 0) return;
 
 		event.persist();
 
