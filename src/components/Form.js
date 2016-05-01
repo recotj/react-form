@@ -17,7 +17,7 @@ class Form extends mixin(DescendantsWalkable) {
 
 	submit() {
 		const target = ReactDOM.findDOMNode(this);
-		const fakeEvent = SimpleEvent.getPooled('submit', {currentTarget: target, target});
+		const fakeEvent = SimpleEvent.getPooled('submit', { currentTarget: target, target });
 		this.onSubmit(fakeEvent);
 	}
 
@@ -51,13 +51,13 @@ class Form extends mixin(DescendantsWalkable) {
 		Promise.all(validationTasks.map((task) => task()))
 			.then(() => {
 				form.reset();
-				this.props.onSubmit(Object.create(event, {data: submitData}));
+				this.props.onSubmit(Object.create(event, { data: submitData }));
 			})
 	}
 
 	render() {
-		const {children, ...props} = this.props;
-		const form = <form {...props} onSubmit={this.onSubmit}>{children}</form>;
+		const { children, ...props } = this.props;
+		const form = <form { ...props } onSubmit={this.onSubmit}>{children}</form>;
 		return super.render(form);
 	}
 }
@@ -66,8 +66,8 @@ function fetchFieldValuePair(control) {
 	if (!(control instanceof HTMLElement)) return;
 	const field = control.id || control.getAttribute('field');
 
-	if (isFormControl(control)) return {[field]: control.value || ''};
-	if (isContentEditable(control)) return {[field]: control.textContent || ''};
+	if (isFormControl(control)) return { [field]: control.value || '' };
+	if (isContentEditable(control)) return { [field]: control.textContent || '' };
 }
 
 function resetControl(control) {

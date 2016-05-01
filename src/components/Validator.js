@@ -27,7 +27,7 @@ class Validator extends mixin(Validatable) {
 	}
 
 	render() {
-		const { defaultMessage, successMessage, errorMessage, className } = this.props;
+		const { defaultMessage, successMessage, className } = this.props;
 		const { validateState } = this.state;
 		const { ValidateState } = Validator;
 
@@ -37,7 +37,7 @@ class Validator extends mixin(Validatable) {
 		else if (validateState === ValidateState.SUCCESS) message = successMessage;
 		else if (validateState === ValidateState.FAILED) message = this.validationMessage;
 
-		className = classNames(className, {error: validateState === ValidateState.FAILED});
+		className = classNames(className, { error: validateState === ValidateState.FAILED });
 
 		return <label className={className}>{message}</label>;
 	}
