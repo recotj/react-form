@@ -15,6 +15,12 @@ class Form extends mixin(DescendantsWalkable) {
 	};
 	static Validator = Validator;
 
+	submit() {
+		const target = ReactDOM.findDOMNode(this);
+		const fakeEvent = SimpleEvent.getPooled('submit', {currentTarget: target, target});
+		this.onSubmit(fakeEvent);
+	}
+
 	onSubmit(event) {
 		event.stopPropagation();
 		event.preventDefault();
