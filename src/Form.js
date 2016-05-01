@@ -38,12 +38,12 @@ class Form extends React.Component {
 
 	submit() {
 		const target = ReactDOM.findDOMNode(this);
-		const fakeEvent = SimpleEvent.getPooled('submit', {currentTarget: target, target});
+		const fakeEvent = SimpleEvent.getPooled('submit', { currentTarget: target, target });
 		handleSubmit(fakeEvent);
 	}
 
 	render() {
-		const {children, ...props} = this.props;
+		const { children, ...props } = this.props;
 		return (
 			<form {...props}
 				onSubmit={handleSubmit}
@@ -65,12 +65,12 @@ function handleSubmit(event) {
 	const form = event.currentTarget;
 	const owner = ReactOwnerRecord.getOwner(form, Form);
 	if (!owner) return;
-	const {props} = owner;
+	const { props } = owner;
 
 	Promise.resolve(true)
 		.then(() => {
 			// init
-			setState({readyState: ProgressStates.VALIDATE, error: null});
+			setState({ readyState: ProgressStates.VALIDATE, error: null });
 		})
 		.then(() => {
 			// validate at client
@@ -89,7 +89,7 @@ function handleSubmit(event) {
 		})
 		.then((data) => {
 			// custom validate, maybe at server.
-			const {onValidate} = props;
+			const { onValidate } = props;
 			if (!_.isFunction(onValidate)) return data;
 			return Promise.resolve(onValidate(data))
 				.then((valid) => {
@@ -98,18 +98,18 @@ function handleSubmit(event) {
 				});
 		})
 		.then((data) => {
-			setState({readyState: ProgressStates.SUBMIT});
+			setState({ readyState: ProgressStates.SUBMIT });
 			return data;
 		})
 		.then((data) => {
 			// submit
-			const {onSubmit} = props;
+			const { onSubmit } = props;
 			if (!_.isFunction(onSubmit)) return data;
 			return onSubmit(_.assign(event, data));
 		})
 		.then(
-			() => setState({readyState: ProgressStates.END}),
-			(reason) => setState({readyState: ProgressStates.ERROR, error: reason})
+			() => setState({ readyState: ProgressStates.END }),
+			(reason) => setState({ readyState: ProgressStates.ERROR, error: reason })
 		);
 
 	function setState(state) {
@@ -141,7 +141,7 @@ const ReactIrrelevantStates = {
 function checkValidityOnEnter(event) {
 	if (event.which !== KeyCodes.ENTER) return;
 	event.preventDefault(); // prevent default validation visualization.
-	checkValidity({target: event.target, type: 'enter'});
+	checkValidity({ target: event.target, type: 'enter' });
 }
 
 function checkValidityOnChange(event) {
@@ -176,11 +176,11 @@ function hideErrorTipsForAllForms(event) {
 		if (_.isEmpty(elements)) return;
 		if (activeElement.form === form) {
 			_.forEach(elements, (element) => {
-				if (element === activeElement) hideErrorTips({target: element});
-				else checkValidity({target: element, type: 'blur'});
+				if (element === activeElement) hideErrorTips({ target: element });
+				else checkValidity({ target: element, type: 'blur' });
 			});
 		} else {
-			_.forEach(elements, (element) => hideErrorTips({target: element}));
+			_.forEach(elements, (element) => hideErrorTips({ target: element }));
 		}
 	})
 }
@@ -196,7 +196,7 @@ function showValidationMessage(element, message) {
 	const relevantElements = _.slice(element.labels);
 	relevantElements.unshift(element);
 	_.forEach(relevantElements, (element) => {
-		ReactIrrelevantStates.setState(element, {validationMessage: message})
+		ReactIrrelevantStates.setState(element, { validationMessage: message })
 	});
 }
 
