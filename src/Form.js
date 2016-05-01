@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const React = require('react');
 const ReactDOM = require('react-dom');
 
@@ -81,8 +80,8 @@ function handleSubmit(event) {
 		.then(() => {
 			// collect data.
 			const data = {};
-			if (_.isEmpty(form.elements)) return data;
-			_.forEach(form.elements, (element) => {
+			if (isEmptyArray(form.elements)) return data;
+			form.elements.forEach((element) => {
 				data[element.name || element.id] = element.value;
 			});
 			return data;
@@ -90,7 +89,7 @@ function handleSubmit(event) {
 		.then((data) => {
 			// custom validate, maybe at server.
 			const { onValidate } = props;
-			if (!_.isFunction(onValidate)) return data;
+			if (typeof onValidate !== 'function') return data;
 			return Promise.resolve(onValidate(data))
 				.then((valid) => {
 					if (valid === false) throw new Error('rejected by `props.onValidateAtServer`');
@@ -104,8 +103,8 @@ function handleSubmit(event) {
 		.then((data) => {
 			// submit
 			const { onSubmit } = props;
-			if (!_.isFunction(onSubmit)) return data;
-			return onSubmit(_.assign(event, data));
+			if (typeof onSubmit !== 'function') return data;
+			return onSubmit(Object.create(event, data));
 		})
 		.then(
 			() => setState({ readyState: ProgressStates.END }),
@@ -119,11 +118,12 @@ function handleSubmit(event) {
 
 const ReactIrrelevantStates = {
 	setState(element, state) {
-		if (!_.isElement(element)) return;
-		if (_.isEmpty(state)) return;
+		if (!(element instanceof HTMLElement)) return;
+		if (isEmptyObject(state)) return;
 
 		const dataSet = element.dataset;
-		_.forOwn(state, (value, key) => {
+		Object.keys(state).forEach((key) => {
+			const value = state[key];
 			if (value === null || value === false) {
 				Reflect.deleteProperty(dataSet, key);
 			} else if (value !== undefined) {
@@ -132,7 +132,7 @@ const ReactIrrelevantStates = {
 		});
 	},
 	getState(element, key) {
-		if (!_.isElement(element)) return;
+		if (!(element instanceof HTMLElement)) return;
 		if (!key) return;
 		return element.dataset[key];
 	}
@@ -155,8 +155,8 @@ function checkValidity(event) {
 
 	const actions = element.props.validationActions;
 
-	if (_.isEmpty(actions)) return true;
-	if (!_.includes(actions, event.type)) return true;
+	if (isEmptyArray(actions)) return true;
+	if (actions.some((action) => (action === event.type))) return true;
 	if (target.validity.valid) return true;
 
 	showValidationMessage(target);
@@ -165,24 +165,30 @@ function checkValidity(event) {
 
 function hideErrorTipsForAllForms(event) {
 	const forms = document.forms;
-	if (_.isEmpty(forms)) return;
+	if (isEmptyArray(forms)) return;
 
 	const activeElement = document.activeElement;
 
-	_.forEach(forms, (form) => {
+	forms.forEach((form) => {
 		// check whether mounted by React
 		if (!getInstanceFromNode(form)) return;
 		const elements = form.elements;
-		if (_.isEmpty(elements)) return;
+		if (isEmptyArray(elements)) return;
 		if (activeElement.form === form) {
-			_.forEach(elements, (element) => {
-				if (element === activeElement) hideErrorTips({ target: element });
-				else checkValidity({ target: element, type: 'blur' });
-			});
+			elements.forEach(handleMaybeActiveElement);
 		} else {
-			_.forEach(elements, (element) => hideErrorTips({ target: element }));
+			elements.forEach(handleInactiveElement);
 		}
-	})
+	});
+
+	function handleMaybeActiveElement(element) {
+		if (element === activeElement) hideErrorTips({ target: element });
+		else checkValidity({ target: element, type: 'blur' });
+	}
+
+	function handleInactiveElement(element) {
+		hideErrorTips({ target: element });
+	}
 }
 
 function hideErrorTips(event) {
@@ -190,12 +196,12 @@ function hideErrorTips(event) {
 }
 
 function showValidationMessage(element, message) {
-	if (!element) return;
+	if (!(element instanceof HTMLElement)) return;
 	if (message === undefined) message = element.validationMessage;
 
-	const relevantElements = _.slice(element.labels);
+	const relevantElements = element.labels.slice();
 	relevantElements.unshift(element);
-	_.forEach(relevantElements, (element) => {
+	relevantElements.forEach((element) => {
 		ReactIrrelevantStates.setState(element, { validationMessage: message })
 	});
 }
@@ -210,4 +216,12 @@ function getInstanceFromNode(node) {
 	if (!node) return null;
 	const ReactDOMComponentTree = require('react/lib/ReactDOMComponentTree');
 	return ReactDOMComponentTree.getInstanceFromNode(node);
+}
+
+function isEmptyObject(object) {
+	return Object.keys(object).length === 0;
+}
+
+function isEmptyArray(array) {
+	return array.length === 0;
 }
