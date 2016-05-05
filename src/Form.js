@@ -6,6 +6,7 @@ const ReactOwnerRecord = require('decorators/lib/decorator-record-react-owner');
 const KeyCodes = require('keycodes');
 
 const SimpleEvent = require('./events/FakeEvent');
+const ReactIrrelevantStates = require('./utils/ReactIrrelevantStates');
 
 const ProgressStates = {
 	VALIDATE: 'validate',
@@ -116,28 +117,6 @@ function handleSubmit(event) {
 	}
 }
 
-const ReactIrrelevantStates = {
-	setState(element, state) {
-		if (!(element instanceof HTMLElement)) return;
-		if (isEmptyObject(state)) return;
-
-		const dataSet = element.dataset;
-		Object.keys(state).forEach((key) => {
-			const value = state[key];
-			if (value === null || value === false) {
-				Reflect.deleteProperty(dataSet, key);
-			} else if (value !== undefined) {
-				dataSet[key] = value;
-			}
-		});
-	},
-	getState(element, key) {
-		if (!(element instanceof HTMLElement)) return;
-		if (!key) return;
-		return element.dataset[key];
-	}
-};
-
 function checkValidityOnEnter(event) {
 	if (event.which !== KeyCodes.ENTER) return;
 	event.preventDefault(); // prevent default validation visualization.
@@ -216,10 +195,6 @@ function getInstanceFromNode(node) {
 	if (!node) return null;
 	const ReactDOMComponentTree = require('react/lib/ReactDOMComponentTree');
 	return ReactDOMComponentTree.getInstanceFromNode(node);
-}
-
-function isEmptyObject(object) {
-	return Object.keys(object).length === 0;
 }
 
 function isEmptyArray(array) {
