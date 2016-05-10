@@ -23,7 +23,6 @@
   "dependencies": {
     "decorators": "git+https://github.com/recotj/decorators.git",
     "keycodes": "git+https://github.com/recotj/keycodes.git",
-    "lodash": "^4.11.1",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
     "react-tree-utils": "git+https://github.com/recotj/react-tree-utils.git",

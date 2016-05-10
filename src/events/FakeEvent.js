@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const pool = require('decorators/lib/decorator-pool');
 
 const PERSISTENT = Symbol();
@@ -10,7 +9,7 @@ const PERSISTENT = Symbol();
 })
 class FakeEvent {
 	constructor(type, init) {
-		_.assign(this, init);
+		Object.assign(this, init);
 		this.type = type;
 		this[PERSISTENT] = false;
 	}
