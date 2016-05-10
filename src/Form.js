@@ -5,6 +5,9 @@ const lifecycle = require('decorators/lib/decorator-lifecycle');
 const ReactOwnerRecord = require('decorators/lib/decorator-record-react-owner');
 const KeyCodes = require('keycodes');
 
+const getNativeComponentFromNode = require('react-tree-utils/lib/getNativeComponentFromNode');
+const getClosestReactElementFromNode = require('react-tree-utils/lib/getClosestReactElementFromNode');
+
 const SimpleEvent = require('./events/FakeEvent');
 const ReactIrrelevantStates = require('./utils/ReactIrrelevantStates');
 
@@ -129,7 +132,7 @@ function checkValidityOnChange(event) {
 
 function checkValidity(event) {
 	const target = event.target;
-	const element = getReactElementFormNode(target);
+	const element = getClosestReactElementFromNode(target);
 	if (!element) return true;
 
 	const actions = element.props.validationActions;
@@ -150,7 +153,7 @@ function hideErrorTipsForAllForms(event) {
 
 	forms.forEach((form) => {
 		// check whether mounted by React
-		if (!getInstanceFromNode(form)) return;
+		if (!getNativeComponentFromNode(form)) return;
 		const elements = form.elements;
 		if (isEmptyArray(elements)) return;
 		if (activeElement.form === form) {
@@ -183,18 +186,6 @@ function showValidationMessage(element, message) {
 	relevantElements.forEach((element) => {
 		ReactIrrelevantStates.setState(element, { validationMessage: message })
 	});
-}
-
-function getReactElementFormNode(node) {
-	const component = getInstanceFromNode(node);
-	if (!component) return null;
-	return component._currentElement;
-}
-
-function getInstanceFromNode(node) {
-	if (!node) return null;
-	const ReactDOMComponentTree = require('react/lib/ReactDOMComponentTree');
-	return ReactDOMComponentTree.getInstanceFromNode(node);
 }
 
 function isEmptyArray(array) {

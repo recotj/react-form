@@ -26,6 +26,7 @@
     "lodash": "^4.11.1",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
+    "react-tree-utils": "git+https://github.com/recotj/react-tree-utils.git",
     "utils": "git+https://github.com/recotj/utils.git"
   },
   "devDependencies": {
@@ -41,6 +42,7 @@
     "del": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-uglify": "^1.5.3",
+    "gulp-workflow": "git+https://github.com/recotj/gulp-workflow.git",
     "run-sequence": "^1.1.5",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
